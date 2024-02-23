@@ -50,8 +50,14 @@ def list_lru_for_each_entry(
     :param member: Name of list node member in entry type.
     :return: Iterator of ``type *`` objects.
     """
-    if ((has_member(lru, "memcg_aware") and lru.memcg_aware) or
-        (has_member(lru.node, "memcg_lrus") and lru.node[0].memcg_lrus)) :
+    memcg_aware = 0
+    if (has_member(lru, 'memcg_aware') and lru.memcg_aware) :
+        memcg_aware = 1
+    if has_member(lru, 'node') :
+        # no lru.node in uek7 but covered in above test
+        if has_member(lru.node, "memcg_lrus") and lru.node[0].memcg_lrus :
+            memcg_aware = 1
+    if memcg_aware :
         if has_member(lru, "ext") or has_member(lru, "xa") :
             # v5.13 (uek7) or newer
             if has_member(lru, "ext") :
@@ -110,8 +116,14 @@ def list_lru_from_memcg_node_for_each_entry(
     :return: Iterator of ``type *`` objects.
     """
     if node_state(nid, prog["N_ONLINE"]) :
-        if ((has_member(lru, "memcg_aware") and lru.memcg_aware) or
-            (has_member(lru.node, "memcg_lrus") and lru.node[0].memcg_lrus)) :
+        memcg_aware = 0
+        if (has_member(lru, 'memcg_aware') and lru.memcg_aware) :
+            memcg_aware = 1
+        if has_member(lru, 'node') :
+            # no lru.node in uek7 but covered in above test
+            if has_member(lru.node, "memcg_lrus") and lru.node[0].memcg_lrus :
+                memcg_aware = 1
+        if memcg_aware :
             if has_member(lru, "ext") or has_member(lru, "xa") :
                 # v5.13 (uek7) or newer
                 if has_member(lru, "ext") :
