@@ -140,4 +140,4 @@ def test_list_lru(
                         print(
                             f"lru for bp {hex(bp)} FOUND at mencg idx {memcg}"
                         )
-        print(f"errors {errors} in {d_cnt} bps")
+            print(f"errors {errors} in {d_cnt} bps")
